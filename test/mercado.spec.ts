@@ -50,9 +50,9 @@ describe('Testes da api de mercado', () => {
         .expectBodyContains(
           'adicionado com sucesso com todas as subcategorias iniciais vazias!'
         )
-        .expectJson('nome', fullname)
-        .expectJson('endereco', andress)
-        .expectJson('cnpj', '17688656256879');
+        .expectJson('novoMercado.nome', fullname)
+        .expectJson('novoMercado.endereco', andress)
+        .expectJson('novoMercado.cnpj', '17688656256879');
     });
 
     it('Error', async () => {
@@ -63,7 +63,8 @@ describe('Testes da api de mercado', () => {
           cnpj: '17688656256879'
         })
         .expectStatus(StatusCodes.BAD_REQUEST)
-        .inspect();
+        .expectBodyContains('Nome é obrigatório')
+        .expectBodyContains('Endereço é obrigatório');
     });
   });
 
@@ -72,8 +73,7 @@ describe('Testes da api de mercado', () => {
       await p
         .spec()
         .get(`${baseUrl}${mercadoId}/produtos`)
-        .expectStatus(StatusCodes.OK)
-        .inspect();
+        .expectStatus(StatusCodes.OK);
     });
 
     it('ERRO', async () => {
@@ -81,7 +81,7 @@ describe('Testes da api de mercado', () => {
         .spec()
         .get(`${baseUrl}xxxx/produtos`)
         .expectStatus(StatusCodes.BAD_REQUEST)
-        .expectBodyContains('Mercado não encontrado');
+        .expectBodyContains('ID do Mercado deve ser um número inteiro');
     });
   });
 });
